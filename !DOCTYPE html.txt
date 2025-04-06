@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ao seu lado sou outro alguém</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.imgur.com/UNiGBaD.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+      overflow: hidden;
+    }
+    section {
+      display: none;
+      padding: 1em 0;
+    }
+    section.active {
+      display: block;
+    }
+    h1, h2, p {
+      margin: 0.8em 0;
+      text-shadow: 1px 1px 4px #000;
+    }
+    button {
+      background-color: #ff80ab;
+      color: white;
+      border: none;
+      padding: 0.6em 1.4em;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 0.5em;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #ff4081;
+    }
+
+    /* Corações caindo */
+    .heart {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
+      animation: fall linear infinite;
+      color: #ff8fa3;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Fogos */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+<audio autoplay loop>
+  <source src="https://www.dropbox.com/scl/fi/98r7j2sh2b69c9eeo9e1c/CorDeMarte.mp3?rlkey=abc123&dl=1" type="audio/mpeg">
+  Seu navegador não suporta áudio.
+</audio>
+
+<canvas id="fireworks"></canvas>
+
+<section id="inicio" class="active">
+  <h1>Oi Clara!</h1>
+  <p>Topa brincar de Sim ou Não?</p>
+  <button onclick="showTab('q1')">Começar</button>
+</section>
+
+<section id="q1">
+  <h2>Sabia que seu sorriso me desmonta todinha?</h2>
+  <button onclick="showTab('q2')">Haha sim!</button>
+  <button onclick="showTab('q2')">Agora tô sabendo</button>
+</section>
+
+<section id="q2">
+  <h2>Você tem noção do quanto é linda?</h2>
+  <button onclick="showTab('q3')">Tô ficando convencida...</button>
+  <button onclick="showTab('q3')">Você que é!</button>
+</section>
+
+<section id="q3">
+  <h2>Seu abraço seria meu lugar favorito?</h2>
+  <button onclick="showTab('q4')">Já é!</button>
+  <button onclick="showTab('q4')">Eu deixo ser!</button>
+</section>
+
+<section id="q4">
+  <h2>Você deixaria alguém cuidar de você com muito carinho?</h2>
+  <button onclick="showTab('q5')">Se for você, sim</button>
+  <button onclick="showTab('q5')">Faz até café?</button>
+</section>
+
+<section id="q5">
+  <h2>Você gosta de surpresas feitas com amor?</h2>
+  <button onclick="showTab('q6')">Simmmm</button>
+  <button onclick="showTab('q6')">Tô amando já!</button>
+</section>
+
+<section id="q6">
+  <h2>Você sabia que depois que eu te conheci, meus pensamentos têm você?</h2>
+  <button onclick="showTab('pedido')">Isso é muito fofo!</button>
+</section>
+
+<section id="pedido">
+  <h1>Clara, você quer namorar comigo?</h1>
+  <p>
+    Clara, entre tantos sorrisos, o teu me escolheu.<br>
+    Teu jeito me encanta, teu olhar me prendeu.<br>
+    Cada detalhe teu virou poesia no meu dia.<br>
+    E é por isso que hoje te faço essa perguntinha:<br>
+    Com todo carinho e amor que em mim nasceu,<br>
+    Quer namorar comigo? — de coração, Hadassa.
+  </p>
+  <button onclick="responderSim()">Sim!</button>
+  <button onclick="fugir(this)">Não...</button>
+</section>
+
+<section id="sim">
+  <h1>Você disse SIM!</h1>
+  <p>Agora somos Hadassa & Clara oficialmente!</p>
+  <p style="font-size: 2em;">Te amo!</p>
+</section>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function fugir(btn) {
+    btn.style.position = "absolute";
+    btn.style.left = Math.random() * 80 + "%";
+    btn.style.top = Math.random() * 80 + "%";
+  }
+
+  function responderSim() {
+    showTab('sim');
+    startFireworks();
+  }
+
+  // Corações caindo
+  setInterval(() => {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.textContent = '❤';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = 3 + Math.random() * 2 + 's';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+  }, 300);
+
+  // Fogos de artifício
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = [];
+
+  function createParticle(x, y) {
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x, y,
+        dx: (Math.random() - 0.5) * 5,
+        dy: (Math.random() - 0.5) * 5,
+        life: 100
+      });
+    }
+  }
+
+  function updateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, i) => {
+      p.x += p.dx;
+      p.y += p.dy;
+      p.life -= 1;
+      ctx.fillStyle = `rgba(255, ${50 + Math.random() * 150}, ${100 + Math.random() * 100}, ${p.life / 100})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+      if (p.life <= 0) particles.splice(i, 1);
+    });
+  }
+
+  function startFireworks() {
+    const interval = setInterval(() => {
+      createParticle(Math.random() * canvas.width, Math.random() * canvas.height / 2);
+    }, 500);
+    setInterval(updateParticles, 30);
+  }
+</script>
+</body>
+</html>
